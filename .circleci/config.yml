@@ -15,7 +15,7 @@ remote_docker_defaults: &remote_docker_defaults
   docker: [{image: 'docker:17.06-git'}]
 
 basic_docker_build: &basic_docker_build
-  name: "Build a really basic docker image"
+  name: "Build a really basic docker image."
   command: |
     dockerfile=Dockerfile
     echo "FROM alpine:latest" > $dockerfile
