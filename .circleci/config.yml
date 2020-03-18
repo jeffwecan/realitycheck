@@ -23,6 +23,15 @@ basic_docker_build: &basic_docker_build
     docker build -f $dockerfile --tag throwaway:$CIRCLE_BUILD_NUM .
     docker run --rm throwaway:$CIRCLE_BUILD_NUM
 
+sleepy_docker_build: &sleepy_docker_build
+  name: "Build a really basic docker image"
+  command: |
+    dockerfile=Dockerfile
+    echo "FROM alpine:latest" > $dockerfile
+    echo "RUN time sleep $((RANDOM % 300))" >> $dockerfile
+    docker build -f $dockerfile --tag throwaway:$CIRCLE_BUILD_NUM .
+    docker run --rm throwaway:$CIRCLE_BUILD_NUM
+
 contexts_defaults: &contexts_defaults
   docker: [{image: 'alpine:latest'}]
   working_directory: /a/contexts/test
@@ -74,6 +83,16 @@ jobs:
       - setup_remote_docker
       - run:
           <<: *basic_docker_build
+      - run: docker version
+
+  sleepy_remote_docker:
+    <<: *remote_docker_defaults
+    steps:
+      - run: which docker
+      - run: docker -v
+      - setup_remote_docker
+      - run:
+          <<: *sleepy_docker_build
       - run: docker version
 
   docker_layer_caching:
@@ -214,4 +233,10 @@ workflows:
           requires:
             - write_workspace
       - artifacts_test_results
+
+  lots_o_jobs:
+    jobs:
+      - sleepy_remote_docker
+      - sleepy_remote_docker
+      - sleepy_remote_docker
 
