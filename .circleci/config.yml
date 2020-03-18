@@ -236,7 +236,29 @@ workflows:
 
   lots_o_jobs:
     jobs:
-      - sleepy_remote_docker
-      - sleepy_remote_docker
-      - sleepy_remote_docker
-
+      - sleepy_remote_docker0
+      - sleepy_remote_docker1
+      - sleepy_remote_docker2
+      - sleepy_remote_docker3
+      - sleepy_remote_docker4
+      - sleepy_remote_docker5
+      - sleepy_remote_docker6
+      - sleepy_remote_docker7
+      - sleepy_remote_docker8
+      - sleepy_remote_docker9
+      - sleepy_remote_docker10
+      - sleepy_remote_docker11
+      - sleepy_remote_docker12
+      - sleepy_remote_docker13
+      - sleepy_remote_docker14
+      - sleepy_remote_docker15
+      - sleepy_remote_docker16
+      - sleepy_remote_docker17
+      - sleepy_remote_docker18
+      - sleepy_remote_docker19
+      - sleepy_remote_docker20
+      - sleepy_remote_docker21
+      - sleepy_remote_docker22
+      - sleepy_remote_docker23
+      - sleepy_remote_docker24
+      - sleepy_remote_docker25
