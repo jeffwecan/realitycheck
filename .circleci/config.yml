@@ -32,6 +32,16 @@ sleepy_docker_build: &sleepy_docker_build
     docker build -f $dockerfile --tag throwaway:$CIRCLE_BUILD_NUM .
     docker run --rm throwaway:$CIRCLE_BUILD_NUM
 
+sleepy_remote_docker_job_template: &sleepy_remote_docker_job_template
+  <<: *remote_docker_defaults
+  steps:
+    - run: which docker
+    - run: docker -v
+    - setup_remote_docker
+    - run:
+        <<: *sleepy_docker_build
+    - run: docker version
+
 contexts_defaults: &contexts_defaults
   docker: [{image: 'alpine:latest'}]
   working_directory: /a/contexts/test
@@ -85,16 +95,6 @@ jobs:
           <<: *basic_docker_build
       - run: docker version
 
-  sleepy_remote_docker:
-    <<: *remote_docker_defaults
-    steps:
-      - run: which docker
-      - run: docker -v
-      - setup_remote_docker
-      - run:
-          <<: *sleepy_docker_build
-      - run: docker version
-
   docker_layer_caching:
     <<: *remote_docker_defaults
     steps:
@@ -115,6 +115,159 @@ jobs:
       - run:
           <<: *basic_docker_build
       - run: docker version
+
+  sleepy_remote_docker0:
+    <<: *sleepy_remote_docker_job_template
+    
+  sleepy_remote_docker1:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker2:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker3:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker4:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker5:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker6:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker7:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker8:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker9:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker10:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker11:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker12:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker13:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker14:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker15:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker16:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker17:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker18:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker19:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker20:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker21:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker22:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker23:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker24:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker25:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker26:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker27:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker28:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker29:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker30:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker31:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker32:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker33:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker34:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker35:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker36:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker37:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker38:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker39:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker40:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker41:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker42:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker43:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker44:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker45:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker46:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker47:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker48:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker49:
+    <<: *sleepy_remote_docker_job_template
+
+  sleepy_remote_docker50:
+    <<: *sleepy_remote_docker_job_template
 
   # feature jobs
   contexts:
@@ -262,3 +415,4 @@ workflows:
       - sleepy_remote_docker23
       - sleepy_remote_docker24
       - sleepy_remote_docker25
+
