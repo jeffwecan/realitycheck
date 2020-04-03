@@ -6,7 +6,12 @@ sleepy_docker_build: &sleepy_docker_build
     - run:
         name: sleeeeeeeeep
         command: |
-          time sleep $((RANDOM % 3600))
+          for i in {1..12}; do 
+            SLEEP_TIME=$((RANDOM % 300));
+            echo "I am $i and I so sweepy, might just sleep for $SLEEP_TIME...";
+            time sleep $SLEEP_TIME;
+            echo "Ok, ok, $i is up";
+          done
 
 # lets do even more jobs
 jobs:
