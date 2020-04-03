@@ -5,6 +5,7 @@ sleepy_docker_build: &sleepy_docker_build
   steps:
     - run:
         name: sleeeeeeeeep
+        shell: /bin/bash
         command: |
           for i in {1..12}; do 
             SLEEP_TIME=$((RANDOM % 300));
