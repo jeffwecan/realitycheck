@@ -8,7 +8,6 @@ jobs:
     - run:
         name: Attempt to query vault
         command: |
-          set -x
           echo $VAULT_ROLE_ID
           ssh-add <(echo "$VAULT_BASTION_SSH_KEY" | base64 -d)
           curl icanhazip.com
