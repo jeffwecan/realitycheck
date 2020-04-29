@@ -42,7 +42,7 @@ jobs:
           chmod +x /usr/local/bin/vault
           rm -rf /tmp/vault.zip
 
-          echo 'Logging into vault using approle...''
+          echo 'Logging into vault using approle...'
           vault read sys/init
           approle_login_response="$(\
             vault write auth/approle/login \
