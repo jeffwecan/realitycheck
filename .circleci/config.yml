@@ -8,12 +8,10 @@ jobs:
     - run:
         name: Attempt to query vault
         command: |
-          echo $VAULT_ROLE_ID
+          echo "My IP is: $(curl --silent icanhazip.com)"
 
-          echo "Adding vault bastion SSH key to key ring..."
+          echo 'Adding vault bastion SSH key to key ring...'
           ssh-add <(echo "$VAULT_BASTION_SSH_KEY" | base64 -d)
-
-          echo "My IP!: $(curl --silent icanhazip.com)"
 
           echo "Forwarding port 8200, via $VAULT_BASTION_HOST on localhost to: $VAULT_NLB_HOST"
           ssh \
@@ -28,11 +26,11 @@ jobs:
           echo "VAULT_ADDR set to: '$VAULT_ADDR'"
 
           echo "Ensuring vault is reachable with a request to: $VAULT_ADDR/v1/sys/health"
-          curl -v --max-time 5 "$VAULT_ADDR/v1/sys/health"
+          curl --silent --max-time 5 "$VAULT_ADDR/v1/sys/health"
 
-          echo "Installing unzip (blergh), and then downloading and extracting vault to /usr/local/bin..."
+          echo 'Installing unzip (blergh), and then downloading and extracting vault to /usr/local/bin...'
           # also jq for now I suppose... presumably all this jazz can be baked into somesort of other step / container?
-          apt update && apt install --yes unzip jq
+          apt update 1>/dev/null && apt install --yes unzip jq 1>/dev/null
           export VAULT_VERSION=1.4.0
           wget \
             --no-verbose \
@@ -56,7 +54,7 @@ jobs:
           vault token lookup
 
           echo 'Installing aws cli...'
-          pip install awscli
+          pip install --quiet awscli
 
           echo 'Generate AWS STS credentials...'
           sts_response=$(vault read -format=json aws-hc-circleci-staging/sts/circleci-test)
@@ -68,10 +66,12 @@ jobs:
           export AWS_DEFAULT_REGION="us-west-2"
 
           echo 'Attempting to describe EC2 instances with credentials...'
-          aws ec2 describe-instances
+          aws ec2 describe-instances \
+            --region=us-east-1 \
+            --query 'Reservations[*].Instances[*].InstanceId'
 
           echo 'Revoking vault token...'
-          vault token revoke
+          vault token revoke -self
 
 workflows:
   version: 2
