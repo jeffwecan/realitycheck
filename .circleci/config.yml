@@ -19,6 +19,7 @@ jobs:
             -o ExitOnForwardFailure=yes \
             -N \
             -f \
+            -q \
             -L "8200:$VAULT_NLB_HOST:8200" \
             "ubuntu@$VAULT_BASTION_HOST"
 
@@ -67,7 +68,6 @@ jobs:
 
           echo 'Attempting to describe EC2 instances with credentials...'
           aws ec2 describe-instances \
-            --region=us-east-1 \
             --query 'Reservations[*].Instances[*].InstanceId'
 
           echo 'Revoking vault token...'
