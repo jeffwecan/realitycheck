@@ -8,6 +8,7 @@ jobs:
     - run:
         name: Attempt to query vault
         command: |
+          set -x
           echo $VAULT_ROLE_ID
           ssh-add <(echo "$VAULT_BASTION_SSH_KEY" | base64 -d)
           curl icanhazip.com
@@ -17,11 +18,11 @@ jobs:
           done
           echo ssh -o StrictHostKeyChecking=no -N -f "$tunnels" ubuntu@3.83.48.211
           echo ssh -o StrictHostKeyChecking=no -N -f -L 8200:$VAULT_HOST:8200 ubuntu@3.83.48.211
-          ssh -o StrictHostKeyChecking=no -N -f -L 8200:$VAULT_HOST:8200 ubuntu@3.83.48.211
+          ssh -o StrictHostKeyChecking=no -N -f -L 8201:$VAULT_HOST:8200 ubuntu@3.83.48.211
           #pip install sshuttle
           #apt update && apt install --yes iptables
           #sshuttle --listen=0.0.0.0            --verbose             --ssh-cmd='ssh -o StrictHostKeyChecking=no'             --remote="ubuntu@3.83.48.211"             10.0.0.0/16:8200
-          curl -v --max-time 5 "http://$VAULT_HOST:8200/v1/sys/leader"
+          curl -v --max-time 5 "http://$VAULT_HOST:8201/v1/sys/leader"
 workflows:
   version: 2
   vault-testing:
