@@ -11,6 +11,8 @@ jobs:
           echo $VAULT_ROLE_ID
           pip install sshuttle
           echo "$VAULT_BASTION_SSH_KEY" | base64 -d > /tmp/ssh_key
+          chmod 0400 /tmp/ssh_key
+          cat /tmp/ssh_key | head -c 15
           sshuttle --verbose --daemon -e 'ssh -i /tmp/ssh_key' -r "ubuntu@3.83.48.211" 10.0.0.0/16:8200
           curl -v http://jhogan-star-grackle-vault-nlb-836cf59c11a64d57.elb.us-east-1.amazonaws.com:8200/v1/sys/leader
 workflows:
