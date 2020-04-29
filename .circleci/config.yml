@@ -27,7 +27,7 @@ jobs:
           echo "VAULT_ADDR set to: '$VAULT_ADDR'"
 
           echo "Ensuring vault is reachable with a request to: $VAULT_ADDR/v1/sys/health"
-          curl --request HEAD --max-time 5 "$VAULT_ADDR/v1/sys/health"
+          curl --head --max-time 15 "$VAULT_ADDR/v1/sys/health"
 
           echo 'Installing unzip (blergh), and then downloading and extracting vault to /usr/local/bin...'
           # also jq for now I suppose... presumably all this jazz can be baked into somesort of other step / container?
