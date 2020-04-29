@@ -9,19 +9,50 @@ jobs:
         name: Attempt to query vault
         command: |
           echo $VAULT_ROLE_ID
+
+          echo "Adding vault bastion SSH key to key ring..."
           ssh-add <(echo "$VAULT_BASTION_SSH_KEY" | base64 -d)
-          curl icanhazip.com
-          tunnels=''
-          for IP in $(getent hosts jhogan-star-grackle-vault-nlb-836cf59c11a64d57.elb.us-east-1.amazonaws.com | awk '{print $1;}'); do
-            tunnels="$tunnels -L 8200:$IP:8200"
-          done
-          echo ssh -o StrictHostKeyChecking=no -N -f "$tunnels" ubuntu@3.83.48.211
-          echo ssh -o StrictHostKeyChecking=no -N -f -L 8200:$VAULT_HOST:8200 ubuntu@3.83.48.211
-          ssh -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -f -L 8200:10.0.3.8:8200 ubuntu@3.83.48.211
-          #pip install sshuttle
-          #apt update && apt install --yes iptables
-          #sshuttle --listen=0.0.0.0            --verbose             --ssh-cmd='ssh -o StrictHostKeyChecking=no'             --remote="ubuntu@3.83.48.211"             10.0.0.0/16:8200
-          curl -v --max-time 5 "http://$VAULT_HOST:8200/v1/sys/leader"
+
+          echo "My IP!: $(curl --silent icanhazip.com)"
+
+          echo "Forwarding port 8200, via $VAULT_BASTION_HOST on localhost to: $VAULT_NLB_HOST"
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o ExitOnForwardFailure=yes \
+            -N \
+            -f \
+            -L "8200:$VAULT_NLB_HOST:8200" \
+            "ubuntu@$VAULT_BASTION_HOST"
+
+          export VAULT_ADDR="http://localhost:8200"
+          echo "VAULT_ADDR set to: '$VAULT_ADDR'"
+
+          echo "Ensuring vault is reachable with a request to: $VAULT_ADDR/v1/sys/health"
+          curl -v --max-time 5 "$VAULT_ADDR/v1/sys/health"
+
+          echo "Installing unzip (blergh), and then downloading and extracting vault to /usr/local/bin..."
+          # also jq for now I suppose... presumably all this jazz can be baked into somesort of other step / container?
+          apt update && apt install --yes unzip jq
+          export VAULT_VERSION=1.4.0
+          wget \
+            --no-verbose \
+            --output-document="/tmp/vault.zip" \
+            "https://releases.hashicorp.com/vault/$VAULT_VERSION+ent/vault_$VAULT_VERSION+ent_linux_amd64.zip"
+          unzip /tmp/vault.zip -d /usr/local/bin
+          sudo chmod +x /usr/local/bin/vault
+          rm -rf /tmp/vault.zip
+
+          echo "Logging into vault using approle..."
+          vault read sys/init
+          approle_login_response="$(\
+            vault write auth/approle/login \
+              -format=json \
+              role_id="$VAULT_ROLE_ID" \
+              secret_id="$VAULT_SECRET_ID" \
+          )"
+          echo "$approle_login_response" | jq -r '.auth | .client_token' > ~/.vault-token
+          vault token lookup
+
 workflows:
   version: 2
   vault-testing:
