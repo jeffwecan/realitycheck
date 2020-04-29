@@ -13,7 +13,7 @@ jobs:
           curl icanhazip.com
           # ssh -o StrictHostKeyChecking=no -N -f -L 8200::8200 ubuntu@3.83.48.211
           pip install sshuttle
-          sshuttle --verbose --daemon -r "ubuntu@3.83.48.211" 10.0.0.0/16:8200
+          sshuttle --verbose --remote "ubuntu@3.83.48.211" 10.0.0.0/16:8200
           curl -v --max-time 5 http://jhogan-star-grackle-vault-nlb-836cf59c11a64d57.elb.us-east-1.amazonaws.com:8200/v1/sys/leader
 workflows:
   version: 2
