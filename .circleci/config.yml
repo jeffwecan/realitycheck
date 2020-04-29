@@ -42,7 +42,7 @@ jobs:
           chmod +x /usr/local/bin/vault
           rm -rf /tmp/vault.zip
 
-          echo "Logging into vault using approle..."
+          echo 'Logging into vault using approle...''
           vault read sys/init
           approle_login_response="$(\
             vault write auth/approle/login \
@@ -51,7 +51,27 @@ jobs:
               secret_id="$VAULT_SECRET_ID" \
           )"
           echo "$approle_login_response" | jq -r '.auth | .client_token' > ~/.vault-token
+
+          echo 'Token lookup output:'
           vault token lookup
+
+          echo 'Installing aws cli...'
+          pip install awscli
+
+          echo 'Generate AWS STS credentials...'
+          sts_response=$(vault read -format=json aws-hc-circleci-staging/sts/circleci-test)
+
+          echo 'Setting AWS_ environmental variables with STS creds...'
+          export AWS_ACCESS_KEY_ID="$(echo "$sts_response" | jq -r '.data | .access_key')"
+          export AWS_SECRET_ACCESS_KEY="$(echo "$sts_response" | jq -r '.data | .secret_key')"
+          export AWS_SESSION_TOKEN="$(echo "$sts_response" | jq -r '.data | .security_token')"
+          export AWS_DEFAULT_REGION="us-west-2"
+
+          echo 'Attempting to describe EC2 instances with credentials...'
+          aws ec2 describe-instances
+
+          echo 'Revoking vault token...'
+          vault token revoke
 
 workflows:
   version: 2
