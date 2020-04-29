@@ -15,7 +15,15 @@ jobs:
       - run:
           name: "echo environment variables from vault-test context"
           command: echo $VAULT_ROLE_ID
-      - run: pip install sshuttle
-      - run: echo "$VAULT_BASTION_SSH_KEY" > /tmp/ssh_key
-      - run: sshuttle --daemon -e 'ssh -i /tmp/ssh_key' -r "ubuntu@3.83.48.211" 10.0.0.0/16:8200
-      - run: curl -v http://jhogan-star-grackle-vault-nlb-836cf59c11a64d57.elb.us-east-1.amazonaws.com:8200/v1/sys/leader
+      - run:
+          name: pip install sshuttle
+          command: pip install sshuttle
+      - run:
+          name: echo "$VAULT_BASTION_SSH_KEY" > /tmp/ssh_key
+          command: echo "$VAULT_BASTION_SSH_KEY" > /tmp/ssh_key
+      - run:
+          name: sshuttle --daemon -e 'ssh -i /tmp/ssh_key' -r "ubuntu@3.83.48.211" 10.0.0.0/16:8200
+          command: sshuttle --daemon -e 'ssh -i /tmp/ssh_key' -r "ubuntu@3.83.48.211" 10.0.0.0/16:8200
+      - run:
+          name: curl -v http://jhogan-star-grackle-vault-nlb-836cf59c11a64d57.elb.us-east-1.amazonaws.com:8200/v1/sys/leader
+          command: curl -v http://jhogan-star-grackle-vault-nlb-836cf59c11a64d57.elb.us-east-1.amazonaws.com:8200/v1/sys/leader
