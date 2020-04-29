@@ -39,7 +39,7 @@ jobs:
             --output-document="/tmp/vault.zip" \
             "https://releases.hashicorp.com/vault/$VAULT_VERSION+ent/vault_$VAULT_VERSION+ent_linux_amd64.zip"
           unzip /tmp/vault.zip -d /usr/local/bin
-          sudo chmod +x /usr/local/bin/vault
+          chmod +x /usr/local/bin/vault
           rm -rf /tmp/vault.zip
 
           echo "Logging into vault using approle..."
