@@ -12,9 +12,10 @@ jobs:
           ssh-add <(echo "$VAULT_BASTION_SSH_KEY" | base64 -d)
           curl icanhazip.com
           tunnels=''
-          for IP in "$(dig +short "$VAULT_HOST")"; do
+          for IP in "$(getent hosts jhogan-star-grackle-vault-nlb-836cf59c11a64d57.elb.us-east-1.amazonaws.com | awk '{print $1;}')"; do
             tunnels="$tunnels -L 8200:$IP:8200"
           done
+          echo ssh -o StrictHostKeyChecking=no -N -f "$tunnels" ubuntu@3.83.48.211
           ssh -o StrictHostKeyChecking=no -N -f "$tunnels" ubuntu@3.83.48.211
           #pip install sshuttle
           #apt update && apt install --yes iptables
