@@ -16,8 +16,8 @@ jobs:
             tunnels="$tunnels -L 8200:$IP:8200"
           done
           echo ssh -o StrictHostKeyChecking=no -N -f "$tunnels" ubuntu@3.83.48.211
-          echo ssh -o StrictHostKeyChecking=no -N -L 8200:$VAULT_HOST:8200 ubuntu@3.83.48.211
-          ssh -o StrictHostKeyChecking=no -N -L 8200:$VAULT_HOST:8200 ubuntu@3.83.48.211
+          echo ssh -o StrictHostKeyChecking=no -N -f -L 8200:$VAULT_HOST:8200 ubuntu@3.83.48.211
+          ssh -o StrictHostKeyChecking=no -N -f -L 8200:$VAULT_HOST:8200 ubuntu@3.83.48.211
           #pip install sshuttle
           #apt update && apt install --yes iptables
           #sshuttle --listen=0.0.0.0            --verbose             --ssh-cmd='ssh -o StrictHostKeyChecking=no'             --remote="ubuntu@3.83.48.211"             10.0.0.0/16:8200
