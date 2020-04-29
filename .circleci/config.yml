@@ -15,7 +15,6 @@ jobs:
           pip install sshuttle
           sshuttle \
             --verbose \
-            --method=nat \
             --ssh-cmd='ssh -o StrictHostKeyChecking=no' \
             --remote="ubuntu@3.83.48.211" \
             10.0.0.0/16:8200
