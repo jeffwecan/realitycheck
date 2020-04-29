@@ -78,4 +78,4 @@ workflows:
   vault-testing:
     jobs:
     - vault-test:
-        context: vault-test
+        context: vault-approle-aws-access-test
