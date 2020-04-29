@@ -13,6 +13,7 @@ jobs:
           curl icanhazip.com
           # ssh -o StrictHostKeyChecking=no -N -f -L 8200::8200 ubuntu@3.83.48.211
           pip install sshuttle
+          apt update && apt install --yes iptables
           sshuttle \
             --verbose \
             --ssh-cmd='ssh -o StrictHostKeyChecking=no' \
