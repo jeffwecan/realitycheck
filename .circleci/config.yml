@@ -66,6 +66,45 @@ jobs:
     environment:
       SLEEP: 1
 
+  machine_large:
+    machine: true
+    resource_class: large
+    steps:
+      - run: |
+          echo $SLEEP
+          date
+          sleep $SLEEP
+          date
+          echo 'Done sleeping.'
+    environment:
+      SLEEP: 1
+
+  machine_even_more_large_question_mark:
+    machine: true
+    resource_class: xlarge
+    steps:
+      - run: |
+          echo $SLEEP
+          date
+          sleep $SLEEP
+          date
+          echo 'Done sleeping.'
+    environment:
+      SLEEP: 1
+
+  machine_even_even_more_large_question_mark:
+    machine: true
+    resource_class: 2xlarge
+    steps:
+      - run: |
+          echo $SLEEP
+          date
+          sleep $SLEEP
+          date
+          echo 'Done sleeping.'
+    environment:
+      SLEEP: 1
+
   remote_docker:
     <<: *remote_docker_defaults
     steps:
@@ -187,31 +226,33 @@ jobs:
 
 workflows:
   version: 2
-  resource_class_jobs:
-    jobs:
-      - small
-      - medium
-      - medium+
-      - large
-      - xlarge
+  # resource_class_jobs:
+  #   jobs:
+  #     - small
+  #     - medium
+  #     - medium+
+  #     - large
+  #     - xlarge
 
   vm_jobs:
     jobs:
       - machine
-      - remote_docker
-      - docker_layer_caching
-      - machine_dlc
+      - machine_large
+      - machine_even_more_large_question_mark
+      - machine_even_even_more_large_question_mark
+      # - remote_docker
+      # - docker_layer_caching
+      # - machine_dlc
 
-  feature_jobs:
-    jobs:
-      - save_and_restore_cache
-      - contexts:
-          context: org-global
-      - multi-contexts:
-          context: individual-local
-      - write_workspace
-      - read_workspace:
-          requires:
-            - write_workspace
-      - artifacts_test_results
-
+  # feature_jobs:
+  #   jobs:
+  #     - save_and_restore_cache
+  #     - contexts:
+  #         context: org-global
+  #     - multi-contexts:
+  #         context: individual-local
+  #     - write_workspace
+  #     - read_workspace:
+  #         requires:
+  #           - write_workspace
+  #     - artifacts_test_results
